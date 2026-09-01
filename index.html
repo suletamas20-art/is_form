@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>DCS LOGIN TESZT</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 40px 20px;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #ffffff;
+            color: #292929;
+        }
+
+        .form-container {
+            width: 100%;
+            max-width: 760px;
+            margin: 0 auto;
+        }
+
+        .form-header {
+            margin-bottom: 40px;
+        }
+
+        .form-header h1 {
+            margin: 0 0 12px 0;
+            font-size: 36px;
+            line-height: 1.1;
+            font-weight: 700;
+        }
+
+        .form-header p {
+            margin: 0;
+            font-size: 17px;
+            line-height: 1.5;
+            color: #666666;
+        }
+
+        .form-group {
+            margin-bottom: 28px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-size: 18px;
+            line-height: 1.4;
+            font-weight: 600;
+        }
+
+        input {
+            width: 100%;
+            min-height: 50px;
+            padding: 12px 15px;
+            border: 1px solid #c8c8c8;
+            border-radius: 6px;
+            font-size: 17px;
+            background: #ffffff;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #666666;
+        }
+
+        button {
+            border: 0;
+            border-radius: 6px;
+            padding: 14px 28px;
+            font-size: 17px;
+            font-weight: 600;
+            cursor: pointer;
+            background: #087f83;
+            color: #ffffff;
+        }
+
+        button:hover {
+            opacity: 0.9;
+        }
+
+        button:disabled {
+            opacity: 0.6;
+            cursor: wait;
+        }
+
+        .status {
+            margin-top: 20px;
+            font-size: 16px;
+            line-height: 1.5;
+        }
+
+        .success {
+            color: #187a3d;
+        }
+
+        .error {
+            color: #b42318;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="form-container">
+
+    <div class="form-header">
+        <h1>DCS LOGIN TESZT</h1>
+        <p>
+            Teszt űrlap az iSpring Space beágyazásához.
+        </p>
+    </div>
+
+    <form id="ispringForm">
+
+        <div class="form-group">
+            <label for="question1">
+                1. Hány gyerek található az órán?
+            </label>
+
+            <input
+                type="number"
+                id="question1"
+                name="question1"
+                min="0"
+                required
+            >
+        </div>
+
+        <div class="form-group">
+            <label for="question2">
+                2. Melyik évfolyam?
+            </label>
+
+            <input
+                type="text"
+                id="question2"
+                name="question2"
+                required
+            >
+        </div>
+
+        <button type="submit" id="submitButton">
+            Küldés
+        </button>
+
+        <div id="status" class="status"></div>
+
+    </form>
+
+</div>
+
+
+<script>
+
+    const form = document.getElementById("ispringForm");
+    const button = document.getElementById("submitButton");
+    const status = document.getElementById("status");
+
+    form.addEventListener("submit", function(event) {
+
+        event.preventDefault();
+
+        const question1 = document.getElementById("question1").value;
+        const question2 = document.getElementById("question2").value;
+
+        if (!question1 || !question2) {
+            status.textContent = "Kérlek, töltsd ki mindkét mezőt.";
+            status.className = "status error";
+            return;
+        }
+
+        button.disabled = true;
+        button.textContent = "Küldés...";
+
+        /*
+         * POWER AUTOMATE IDE KERÜL MAJD
+         *
+         * A következő lépésben ide kerül az a URL,
+         * amelyet a Power Automate ad majd nekünk.
+         */
+
+        console.log({
+            question1: question1,
+            question2: question2,
+            timestamp: new Date().toISOString()
+        });
+
+        setTimeout(function() {
+
+            status.textContent =
+                "Teszt sikeres – a válaszok rögzítésre kerültek.";
+
+            status.className = "status success";
+
+            button.disabled = false;
+            button.textContent = "Küldés";
+
+        }, 500);
+
+    });
+
+</script>
+
+</body>
+</html>
