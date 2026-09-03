@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>DCS LOGIN TESZT</title>
+    <title>Adatgyűjtő űrlap</title>
 
     <style>
         * {
@@ -55,7 +55,8 @@
             font-weight: 600;
         }
 
-        input {
+        input,
+        select {
             width: 100%;
             min-height: 50px;
             padding: 12px 15px;
@@ -63,9 +64,11 @@
             border-radius: 6px;
             font-size: 17px;
             background: #ffffff;
+            color: #292929;
         }
 
-        input:focus {
+        input:focus,
+        select:focus {
             outline: none;
             border-color: #666666;
         }
@@ -111,46 +114,120 @@
 <div class="form-container">
 
     <div class="form-header">
-        <h1>DCS LOGIN TESZT</h1>
+        <h1>Adatgyűjtő űrlap</h1>
+
         <p>
-            Teszt űrlap az iSpring Space beágyazásához.
+            Kérlek, add meg az alábbi adatokat.
         </p>
     </div>
 
     <form id="ispringForm">
 
+        <!-- 1. Évfolyam -->
         <div class="form-group">
-            <label for="question1">
-                1. Hány gyerek található az órán?
+
+            <label for="evfolyam">
+                1. Évfolyam
             </label>
 
-            <input
-                type="number"
-                id="question1"
-                name="question1"
-                min="0"
+            <select
+                id="evfolyam"
+                name="evfolyam"
                 required
             >
+
+                <option value="">
+                    Válassz évfolyamot
+                </option>
+
+                <option value="1">1.</option>
+                <option value="2">2.</option>
+                <option value="3">3.</option>
+                <option value="4">4.</option>
+                <option value="5">5.</option>
+                <option value="6">6.</option>
+                <option value="7">7.</option>
+                <option value="8">8.</option>
+                <option value="9">9.</option>
+                <option value="10">10.</option>
+                <option value="11">11.</option>
+                <option value="12">12.</option>
+
+            </select>
+
         </div>
 
+
+        <!-- 2. Osztály -->
         <div class="form-group">
-            <label for="question2">
-                2. Melyik évfolyam?
+
+            <label for="osztaly">
+                2. Osztály (például: 8C, 12B)
             </label>
 
             <input
                 type="text"
-                id="question2"
-                name="question2"
+                id="osztaly"
+                name="osztaly"
+                placeholder="Például: 8C"
                 required
             >
+
         </div>
 
-        <button type="submit" id="submitButton">
+
+        <!-- 3. Diákok száma -->
+        <div class="form-group">
+
+            <label for="diakokSzama">
+                3. Diákok száma
+            </label>
+
+            <input
+                type="number"
+                id="diakokSzama"
+                name="diakokSzama"
+                min="0"
+                step="1"
+                required
+            >
+
+        </div>
+
+
+        <!-- 4. HH / HHH -->
+        <div class="form-group">
+
+            <label for="hhHhhSzama">
+                4. Hátrányos helyzetű tanulók létszáma (HH, HHH)
+            </label>
+
+            <input
+                type="number"
+                id="hhHhhSzama"
+                name="hhHhhSzama"
+                min="0"
+                step="1"
+                required
+            >
+
+        </div>
+
+
+        <!-- Küldés -->
+        <button
+            type="submit"
+            id="submitButton"
+        >
             Küldés
         </button>
 
-        <div id="status" class="status"></div>
+
+        <!-- Visszajelzés -->
+        <div
+            id="status"
+            class="status"
+        ></div>
 
     </form>
 
@@ -160,49 +237,126 @@
 <script>
 
     const form = document.getElementById("ispringForm");
+
     const button = document.getElementById("submitButton");
+
     const status = document.getElementById("status");
+
 
     form.addEventListener("submit", function(event) {
 
         event.preventDefault();
 
-        const question1 = document.getElementById("question1").value;
-        const question2 = document.getElementById("question2").value;
 
-        if (!question1 || !question2) {
-            status.textContent = "Kérlek, töltsd ki mindkét mezőt.";
-            status.className = "status error";
+        const evfolyam =
+            document.getElementById("evfolyam").value;
+
+        const osztaly =
+            document.getElementById("osztaly").value.trim();
+
+        const diakokSzama =
+            document.getElementById("diakokSzama").value;
+
+        const hhHhhSzama =
+            document.getElementById("hhHhhSzama").value;
+
+
+        /*
+         * Kötelező mezők ellenőrzése
+         */
+
+        if (
+            !evfolyam ||
+            !osztaly ||
+            diakokSzama === "" ||
+            hhHhhSzama === ""
+        ) {
+
+            status.textContent =
+                "Kérlek, töltsd ki az összes mezőt.";
+
+            status.className =
+                "status error";
+
             return;
         }
 
-        button.disabled = true;
-        button.textContent = "Küldés...";
 
         /*
-         * POWER AUTOMATE IDE KERÜL MAJD
-         *
-         * A következő lépésben ide kerül az a URL,
-         * amelyet a Power Automate ad majd nekünk.
+         * Gomb ideiglenes tiltása
          */
 
-        console.log({
-            question1: question1,
-            question2: question2,
-            timestamp: new Date().toISOString()
-        });
+        button.disabled = true;
 
-        setTimeout(function() {
+        button.textContent =
+            "Küldés...";
 
-            status.textContent =
-                "Teszt sikeres – a válaszok rögzítésre kerültek.";
 
-            status.className = "status success";
+        /*
+         * Az elküldendő adatok
+         *
+         * A timestamp később az Excel
+         * Időbélyeg mezőjéhez használható.
+         */
 
-            button.disabled = false;
-            button.textContent = "Küldés";
+        const data = {
 
-        }, 500);
+            evfolyam: evfolyam,
+
+            osztaly: osztaly,
+
+            diakokSzama:
+                Number(diakokSzama),
+
+            hhHhhSzama:
+                Number(hhHhhSzama),
+
+            timestamp:
+                new Date().toISOString()
+
+        };
+
+
+        /*
+         * TESZT
+         *
+         * Jelenleg még nem küldjük el
+         * Power Automate-be.
+         */
+
+        console.log(
+            "Űrlap adatai:",
+            data
+        );
+
+
+        /*
+         * Ide kerül majd a Power Automate
+         * HTTP endpoint URL-je.
+         *
+         * const powerAutomateUrl = "...";
+         *
+         * fetch(powerAutomateUrl, {
+         *     method: "POST",
+         *     headers: {
+         *         "Content-Type": "application/json"
+         *     },
+         *     body: JSON.stringify(data)
+         * });
+         */
+
+
+        status.textContent =
+            "Az űrlap adatai készen állnak a Power Automate bekötésére.";
+
+        status.className =
+            "status success";
+
+
+        button.disabled = false;
+
+        button.textContent =
+            "Küldés";
 
     });
 
