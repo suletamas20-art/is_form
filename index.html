@@ -243,7 +243,15 @@
     const status = document.getElementById("status");
 
 
-    form.addEventListener("submit", function(event) {
+    /*
+     * POWER AUTOMATE HTTP VÉGPONT
+     */
+
+    const powerAutomateUrl =
+        "https://default003fcf5734804f89ac3a530d8d046c.be.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/14/workflows/1eb125b191aa4229b3ba3fcb9efb0663/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=eWj-io2uRZCrj7GiArSwHtz7xDU4HA9ZzJvGb0Tpx_Q";
+
+
+    form.addEventListener("submit", async function(event) {
 
         event.preventDefault();
 
@@ -294,16 +302,15 @@
 
         /*
          * Az elküldendő adatok
-         *
-         * A timestamp később az Excel
-         * Időbélyeg mezőjéhez használható.
          */
 
         const data = {
 
-            evfolyam: evfolyam,
+            evfolyam:
+                evfolyam,
 
-            osztaly: osztaly,
+            osztaly:
+                osztaly,
 
             diakokSzama:
                 Number(diakokSzama),
@@ -318,40 +325,83 @@
 
 
         /*
-         * TESZT
-         *
-         * Jelenleg még nem küldjük el
-         * Power Automate-be.
+         * Power Automate POST
          */
 
-        console.log(
-            "Űrlap adatai:",
-            data
-        );
+        try {
+
+            const response =
+                await fetch(
+                    powerAutomateUrl,
+                    {
+                        method: "POST",
+
+                        headers: {
+                            "Content-Type":
+                                "application/json"
+                        },
+
+                        body:
+                            JSON.stringify(data)
+                    }
+                );
+
+
+            /*
+             * HTTP válasz ellenőrzése
+             */
+
+            if (!response.ok) {
+
+                throw new Error(
+                    "HTTP hiba: " +
+                    response.status
+                );
+
+            }
+
+
+            /*
+             * Sikeres küldés
+             */
+
+            status.textContent =
+                "Az adatok sikeresen elküldve.";
+
+            status.className =
+                "status success";
+
+
+            console.log(
+                "Power Automate válasz:",
+                response.status
+            );
+
+
+        } catch (error) {
+
+            /*
+             * Hiba kezelése
+             */
+
+            console.error(
+                "Power Automate hiba:",
+                error
+            );
+
+
+            status.textContent =
+                "Hiba történt az adatok elküldésekor. Kérlek, próbáld újra.";
+
+            status.className =
+                "status error";
+
+        }
 
 
         /*
-         * Ide kerül majd a Power Automate
-         * HTTP endpoint URL-je.
-         *
-         * const powerAutomateUrl = "...";
-         *
-         * fetch(powerAutomateUrl, {
-         *     method: "POST",
-         *     headers: {
-         *         "Content-Type": "application/json"
-         *     },
-         *     body: JSON.stringify(data)
-         * });
+         * Gomb visszaállítása
          */
-
-
-        status.textContent =
-            "Az űrlap adatai készen állnak a Power Automate bekötésére.";
-
-        status.className =
-            "status success";
-
 
         button.disabled = false;
 
