@@ -195,25 +195,6 @@
         </div>
 
 
-        <!-- 4. HH / HHH -->
-        <div class="form-group">
-
-            <label for="hhHhhSzama">
-                4. Hátrányos helyzetű tanulók létszáma (HH, HHH)
-            </label>
-
-            <input
-                type="number"
-                id="hhHhhSzama"
-                name="hhHhhSzama"
-                min="0"
-                step="1"
-                required
-            >
-
-        </div>
-
-
         <!-- Küldés -->
         <button
             type="submit"
@@ -265,9 +246,6 @@
         const diakokSzama =
             document.getElementById("diakokSzama").value;
 
-        const hhHhhSzama =
-            document.getElementById("hhHhhSzama").value;
-
 
         /*
          * Kötelező mezők ellenőrzése
@@ -276,8 +254,7 @@
         if (
             !evfolyam ||
             !osztaly ||
-            diakokSzama === "" ||
-            hhHhhSzama === ""
+            diakokSzama === ""
         ) {
 
             status.textContent =
@@ -314,9 +291,6 @@
 
             diakokSzama:
                 Number(diakokSzama),
-
-            hhHhhSzama:
-                Number(hhHhhSzama),
 
             timestamp:
                 new Date().toISOString()
