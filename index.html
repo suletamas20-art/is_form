@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="hu">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Adatgyűjtő űrlap</title>
+    <title>Data Collection Form</title>
 
     <style>
         * {
@@ -106,6 +106,10 @@
         .error {
             color: #b42318;
         }
+
+        .resend-button {
+            margin-top: 16px;
+        }
     </style>
 </head>
 
@@ -114,21 +118,17 @@
 <div class="form-container">
 
     <div class="form-header">
-        <h1>Adatgyűjtő űrlap</h1>
+        <h1 id="formTitle"></h1>
 
-        <p>
-            Kérlek, add meg az alábbi adatokat.
-        </p>
+        <p id="formIntro"></p>
     </div>
 
     <form id="ispringForm">
 
-        <!-- 1. Évfolyam -->
+        <!-- 1. Grade -->
         <div class="form-group">
 
-            <label for="evfolyam">
-                1. Évfolyam
-            </label>
+            <label for="evfolyam" id="gradeLabel"></label>
 
             <select
                 id="evfolyam"
@@ -136,52 +136,48 @@
                 required
             >
 
-                <option value="">
-                    Válassz évfolyamot
-                </option>
+                <option
+                    value=""
+                    id="gradePlaceholder"
+                ></option>
 
-                <option value="1">1.</option>
-                <option value="2">2.</option>
-                <option value="3">3.</option>
-                <option value="4">4.</option>
-                <option value="5">5.</option>
-                <option value="6">6.</option>
-                <option value="7">7.</option>
-                <option value="8">8.</option>
-                <option value="9">9.</option>
-                <option value="10">10.</option>
-                <option value="11">11.</option>
-                <option value="12">12.</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8">8</option>
+                <option value="9">9</option>
+                <option value="10">10</option>
+                <option value="11">11</option>
+                <option value="12">12</option>
 
             </select>
 
         </div>
 
 
-        <!-- 2. Osztály -->
+        <!-- 2. Class -->
         <div class="form-group">
 
-            <label for="osztaly">
-                2. Osztály (például: 8C, 12B)
-            </label>
+            <label for="osztaly" id="classLabel"></label>
 
             <input
                 type="text"
                 id="osztaly"
                 name="osztaly"
-                placeholder="Például: 8C"
                 required
             >
 
         </div>
 
 
-        <!-- 3. Diákok száma -->
+        <!-- 3. Number of students -->
         <div class="form-group">
 
-            <label for="diakokSzama">
-                3. Diákok száma
-            </label>
+            <label for="diakokSzama" id="studentsLabel"></label>
 
             <input
                 type="number"
@@ -195,20 +191,27 @@
         </div>
 
 
-        <!-- Küldés -->
+        <!-- Submit -->
         <button
             type="submit"
             id="submitButton"
-        >
-            Küldés
-        </button>
+        ></button>
 
 
-        <!-- Visszajelzés -->
+        <!-- Status -->
         <div
             id="status"
             class="status"
         ></div>
+
+
+        <!-- Submit another -->
+        <button
+            type="button"
+            id="resendButton"
+            class="resend-button"
+            style="display: none;"
+        ></button>
 
     </form>
 
@@ -217,172 +220,417 @@
 
 <script>
 
-    const form = document.getElementById("ispringForm");
+    /*
+     * ==========================================
+     * LANGUAGE STRUCTURE
+     * ==========================================
+     *
+     * Currently active language:
+     * English
+     *
+     * Romanian can be added later without
+     * changing the form logic.
+     */
 
-    const button = document.getElementById("submitButton");
+    const currentLanguage = "en";
 
-    const status = document.getElementById("status");
+
+    const LANGUAGES = {
+
+        en: {
+
+            pageTitle:
+                "Data Collection Form",
+
+            formTitle:
+                "Data Collection Form",
+
+            formIntro:
+                "Please enter the following information.",
+
+            gradeLabel:
+                "1. Grade",
+
+            gradePlaceholder:
+                "Select a grade",
+
+            classLabel:
+                "2. Class (e.g. 8C, 12B)",
+
+            classPlaceholder:
+                "e.g. 8C",
+
+            studentsLabel:
+                "3. Number of students",
+
+            submitButton:
+                "Submit",
+
+            submittingButton:
+                "Submitting...",
+
+            validationRequired:
+                "Please complete all fields.",
+
+            successMessage:
+                'The data has been submitted successfully. If you would like to submit another form, click the "Submit another" button!',
+
+            errorMessage:
+                "An error occurred while submitting the data. Please try again.",
+
+            resendButton:
+                "Submit another"
+
+        }
+
+        /*
+         * Future:
+         *
+         * ro: {
+         *
+         *     pageTitle: "...",
+         *     formTitle: "...",
+         *     ...
+         *
+         * }
+         */
+
+    };
+
+
+    const TEXTS =
+        LANGUAGES[currentLanguage];
 
 
     /*
-     * POWER AUTOMATE HTTP VÉGPONT
+     * ==========================================
+     * APPLY LANGUAGE
+     * ==========================================
+     */
+
+    document.title =
+        TEXTS.pageTitle;
+
+    document.documentElement.lang =
+        currentLanguage;
+
+
+    document.getElementById("formTitle").textContent =
+        TEXTS.formTitle;
+
+    document.getElementById("formIntro").textContent =
+        TEXTS.formIntro;
+
+    document.getElementById("gradeLabel").textContent =
+        TEXTS.gradeLabel;
+
+    document.getElementById("gradePlaceholder").textContent =
+        TEXTS.gradePlaceholder;
+
+    document.getElementById("classLabel").textContent =
+        TEXTS.classLabel;
+
+    document.getElementById("osztaly").placeholder =
+        TEXTS.classPlaceholder;
+
+    document.getElementById("studentsLabel").textContent =
+        TEXTS.studentsLabel;
+
+    document.getElementById("submitButton").textContent =
+        TEXTS.submitButton;
+
+    document.getElementById("resendButton").textContent =
+        TEXTS.resendButton;
+
+
+    /*
+     * ==========================================
+     * FORM ELEMENTS
+     * ==========================================
+     */
+
+    const form =
+        document.getElementById("ispringForm");
+
+    const button =
+        document.getElementById("submitButton");
+
+    const status =
+        document.getElementById("status");
+
+    const resendButton =
+        document.getElementById("resendButton");
+
+
+    /*
+     * ==========================================
+     * POWER AUTOMATE HTTP ENDPOINT
+     * ==========================================
      */
 
     const powerAutomateUrl =
         "https://default003fcf5734804f89ac3a530d8d046c.be.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/14/workflows/1eb125b191aa4229b3ba3fcb9efb0663/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=eWj-io2uRZCrj7GiArSwHtz7xDU4HA9ZzJvGb0Tpx_Q";
 
 
-    form.addEventListener("submit", async function(event) {
+    /*
+     * ==========================================
+     * FORM SUBMISSION
+     * ==========================================
+     */
 
-        event.preventDefault();
+    form.addEventListener(
+        "submit",
+        async function(event) {
 
-
-        const evfolyam =
-            document.getElementById("evfolyam").value;
-
-        const osztaly =
-            document.getElementById("osztaly").value.trim();
-
-        const diakokSzama =
-            document.getElementById("diakokSzama").value;
-
-
-        /*
-         * Kötelező mezők ellenőrzése
-         */
-
-        if (
-            !evfolyam ||
-            !osztaly ||
-            diakokSzama === ""
-        ) {
-
-            status.textContent =
-                "Kérlek, töltsd ki az összes mezőt.";
-
-            status.className =
-                "status error";
-
-            return;
-        }
-
-
-        /*
-         * Gomb ideiglenes tiltása
-         */
-
-        button.disabled = true;
-
-        button.textContent =
-            "Küldés...";
-
-
-        /*
-         * Az elküldendő adatok
-         */
-
-        const data = {
-
-            evfolyam:
-                evfolyam,
-
-            osztaly:
-                osztaly,
-
-            diakokSzama:
-                Number(diakokSzama),
-
-            timestamp:
-                new Date().toISOString()
-
-        };
-
-
-        /*
-         * Power Automate POST
-         */
-
-        try {
-
-            const response =
-                await fetch(
-                    powerAutomateUrl,
-                    {
-                        method: "POST",
-
-                        headers: {
-                            "Content-Type":
-                                "application/json"
-                        },
-
-                        body:
-                            JSON.stringify(data)
-                    }
-                );
+            event.preventDefault();
 
 
             /*
-             * HTTP válasz ellenőrzése
+             * Get form values
              */
 
-            if (!response.ok) {
+            const evfolyam =
+                document.getElementById("evfolyam").value;
 
-                throw new Error(
-                    "HTTP hiba: " +
-                    response.status
-                );
+            const osztaly =
+                document
+                    .getElementById("osztaly")
+                    .value
+                    .trim();
 
+            const diakokSzama =
+                document.getElementById("diakokSzama").value;
+
+
+            /*
+             * Required field validation
+             */
+
+            if (
+                !evfolyam ||
+                !osztaly ||
+                diakokSzama === ""
+            ) {
+
+                status.textContent =
+                    TEXTS.validationRequired;
+
+                status.className =
+                    "status error";
+
+                return;
             }
 
 
             /*
-             * Sikeres küldés
+             * Disable submit button
              */
 
-            status.textContent =
-                "Az adatok sikeresen elküldve.";
+            button.disabled =
+                true;
 
-            status.className =
-                "status success";
+            button.textContent =
+                TEXTS.submittingButton;
 
-
-            console.log(
-                "Power Automate válasz:",
-                response.status
-            );
-
-
-        } catch (error) {
 
             /*
-             * Hiba kezelése
+             * Data sent to Power Automate
+             *
+             * IMPORTANT:
+             * The data structure remains unchanged.
              */
 
-            console.error(
-                "Power Automate hiba:",
-                error
-            );
+            const data = {
+
+                evfolyam:
+                    evfolyam,
+
+                osztaly:
+                    osztaly,
+
+                diakokSzama:
+                    Number(diakokSzama),
+
+                timestamp:
+                    new Date().toISOString()
+
+            };
 
 
-            status.textContent =
-                "Hiba történt az adatok elküldésekor. Kérlek, próbáld újra.";
+            /*
+             * Power Automate POST
+             */
 
-            status.className =
-                "status error";
+            try {
+
+                const response =
+                    await fetch(
+                        powerAutomateUrl,
+                        {
+                            method: "POST",
+
+                            headers: {
+                                "Content-Type":
+                                    "application/json"
+                            },
+
+                            body:
+                                JSON.stringify(data)
+                        }
+                    );
+
+
+                /*
+                 * HTTP response check
+                 */
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        "HTTP error: " +
+                        response.status
+                    );
+
+                }
+
+
+                /*
+                 * Successful submission
+                 */
+
+                status.textContent =
+                    TEXTS.successMessage;
+
+                status.className =
+                    "status success";
+
+
+                /*
+                 * Prevent another accidental
+                 * submission of the same data.
+                 */
+
+                button.style.display =
+                    "none";
+
+
+                /*
+                 * Show "Submit another"
+                 * button only after success.
+                 */
+
+                resendButton.style.display =
+                    "inline-block";
+
+
+                console.log(
+                    "Power Automate response:",
+                    response.status
+                );
+
+
+            } catch (error) {
+
+                /*
+                 * Error handling
+                 */
+
+                console.error(
+                    "Power Automate error:",
+                    error
+                );
+
+
+                status.textContent =
+                    TEXTS.errorMessage;
+
+                status.className =
+                    "status error";
+
+
+                /*
+                 * Allow another attempt
+                 */
+
+                button.disabled =
+                    false;
+
+                button.textContent =
+                    TEXTS.submitButton;
+
+            }
 
         }
+    );
 
 
-        /*
-         * Gomb visszaállítása
-         */
+    /*
+     * ==========================================
+     * SUBMIT ANOTHER
+     * ==========================================
+     *
+     * This button appears only after a
+     * successful submission.
+     *
+     * It clears the previous form data and
+     * allows the user to create a completely
+     * new submission.
+     */
 
-        button.disabled = false;
+    resendButton.addEventListener(
+        "click",
+        function() {
 
-        button.textContent =
-            "Küldés";
+            /*
+             * Reset all form fields
+             */
 
-    });
+            form.reset();
+
+
+            /*
+             * Clear status message
+             */
+
+            status.textContent =
+                "";
+
+            status.className =
+                "status";
+
+
+            /*
+             * Hide "Submit another"
+             */
+
+            resendButton.style.display =
+                "none";
+
+
+            /*
+             * Show and enable Submit button
+             */
+
+            button.style.display =
+                "inline-block";
+
+            button.disabled =
+                false;
+
+            button.textContent =
+                TEXTS.submitButton;
+
+
+            /*
+             * Put focus back on the first field
+             */
+
+            document
+                .getElementById("evfolyam")
+                .focus();
+
+        }
+    );
 
 </script>
 
