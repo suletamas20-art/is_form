@@ -688,17 +688,21 @@
      * ==========================================
      */
 
-    courseButton.addEventListener(
-        "click",
-        function() {
+  /*
+ * ==========================================
+ * CONTINUE TO THE COURSE
+ * ==========================================
+ */
 
-            window.open(
-                courseUrl,
-                "_blank"
-            );
+courseButton.addEventListener(
+    "click",
+    function() {
 
-        }
-    );
+        window.top.location.href =
+            courseUrl;
+
+    }
+);
 
 </script>
 
