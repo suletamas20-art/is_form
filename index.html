@@ -107,8 +107,19 @@
             color: #b42318;
         }
 
-        .resend-button {
+        .button-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
             margin-top: 16px;
+        }
+
+        .resend-button {
+            margin-top: 0;
+        }
+
+        .course-button {
+            margin-top: 0;
         }
     </style>
 </head>
@@ -205,13 +216,29 @@
         ></div>
 
 
-        <!-- Submit another -->
-        <button
-            type="button"
-            id="resendButton"
-            class="resend-button"
+        <!-- Post-submission buttons -->
+        <div
+            id="postSubmitButtons"
+            class="button-group"
             style="display: none;"
-        ></button>
+        >
+
+            <!-- Submit another -->
+            <button
+                type="button"
+                id="resendButton"
+                class="resend-button"
+            ></button>
+
+
+            <!-- Continue to the course -->
+            <button
+                type="button"
+                id="courseButton"
+                class="course-button"
+            ></button>
+
+        </div>
 
     </form>
 
@@ -279,7 +306,10 @@
                 "An error occurred while submitting the data. Please try again.",
 
             resendButton:
-                "Submit another"
+                "Submit another",
+
+            courseButton:
+                "Continue to the course"
 
         }
 
@@ -300,6 +330,16 @@
 
     const TEXTS =
         LANGUAGES[currentLanguage];
+
+
+    /*
+     * ==========================================
+     * COURSE URL
+     * ==========================================
+     */
+
+    const courseUrl =
+        "https://otpfay-1278.ispring.eu/app/preview/7709856d-a82a-11f1-8c2d-c688b2cecb06";
 
 
     /*
@@ -342,6 +382,9 @@
     document.getElementById("resendButton").textContent =
         TEXTS.resendButton;
 
+    document.getElementById("courseButton").textContent =
+        TEXTS.courseButton;
+
 
     /*
      * ==========================================
@@ -358,8 +401,14 @@
     const status =
         document.getElementById("status");
 
+    const postSubmitButtons =
+        document.getElementById("postSubmitButtons");
+
     const resendButton =
         document.getElementById("resendButton");
+
+    const courseButton =
+        document.getElementById("courseButton");
 
 
     /*
@@ -515,12 +564,12 @@
 
 
                 /*
-                 * Show "Submit another"
-                 * button only after success.
+                 * Show both post-submission
+                 * buttons only after success.
                  */
 
-                resendButton.style.display =
-                    "inline-block";
+                postSubmitButtons.style.display =
+                    "flex";
 
 
                 console.log(
@@ -600,10 +649,10 @@
 
 
             /*
-             * Hide "Submit another"
+             * Hide post-submission buttons
              */
 
-            resendButton.style.display =
+            postSubmitButtons.style.display =
                 "none";
 
 
@@ -628,6 +677,23 @@
             document
                 .getElementById("evfolyam")
                 .focus();
+
+        }
+    );
+
+
+    /*
+     * ==========================================
+     * CONTINUE TO THE COURSE
+     * ==========================================
+     */
+
+    courseButton.addEventListener(
+        "click",
+        function() {
+
+            window.location.href =
+                courseUrl;
 
         }
     );
