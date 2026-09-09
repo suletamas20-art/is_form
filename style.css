@@ -1,0 +1,114 @@
+* {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 40px 20px;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #ffffff;
+            color: #292929;
+        }
+
+        .form-container {
+            width: 100%;
+            max-width: 760px;
+            margin: 0 auto;
+        }
+
+        .form-header {
+            margin-bottom: 40px;
+        }
+
+        .form-header h1 {
+            margin: 0 0 12px 0;
+            font-size: 36px;
+            line-height: 1.1;
+            font-weight: 700;
+        }
+
+        .form-header p {
+            margin: 0;
+            font-size: 17px;
+            line-height: 1.5;
+            color: #666666;
+        }
+
+        .form-group {
+            margin-bottom: 28px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-size: 18px;
+            line-height: 1.4;
+            font-weight: 600;
+        }
+
+        input,
+        select {
+            width: 100%;
+            min-height: 50px;
+            padding: 12px 15px;
+            border: 1px solid #c8c8c8;
+            border-radius: 6px;
+            font-size: 17px;
+            background: #ffffff;
+            color: #292929;
+        }
+
+        input:focus,
+        select:focus {
+            outline: none;
+            border-color: #666666;
+        }
+
+        button {
+            border: 0;
+            border-radius: 6px;
+            padding: 14px 28px;
+            font-size: 17px;
+            font-weight: 600;
+            cursor: pointer;
+            background: #087f83;
+            color: #ffffff;
+        }
+
+        button:hover {
+            opacity: 0.9;
+        }
+
+        button:disabled {
+            opacity: 0.6;
+            cursor: wait;
+        }
+
+        .status {
+            margin-top: 20px;
+            font-size: 16px;
+            line-height: 1.5;
+        }
+
+        .success {
+            color: #187a3d;
+        }
+
+        .error {
+            color: #b42318;
+        }
+
+        .button-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 16px;
+        }
+
+        .resend-button {
+            margin-top: 0;
+        }
+
+        .course-button {
+            margin-top: 0;
+        }
