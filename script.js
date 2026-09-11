@@ -32,14 +32,32 @@
             gradePlaceholder:
                 "Select a grade",
 
-            classLabel:
-                "2. Class (e.g. 8C, 12B)",
+            municipalityLabel:
+                "2. Municipality",
+
+            municipalityPlaceholder:
+                "Start typing a municipality...",
+
+            schoolLabel:
+                "3. School / Educational institution",
+
+            schoolPlaceholder:
+    "Enter school or educational institution...",
+
+institutionTypeLabel:
+    "4. Institution type",
+
+institutionTypeOtherPlaceholder:
+    "Enter institution type...",
+
+classLabel:
+    "5. Class (e.g. 8C, 12B)",
 
             classPlaceholder:
                 "e.g. 8C",
 
             studentsLabel:
-                "3. Number of students",
+                "6. Number of students",
 
             submitButton:
                 "Submit",
@@ -118,8 +136,26 @@
     document.getElementById("gradePlaceholder").textContent =
         TEXTS.gradePlaceholder;
 
-    document.getElementById("classLabel").textContent =
-        TEXTS.classLabel;
+    document.getElementById("municipalityLabel").textContent =
+        TEXTS.municipalityLabel;
+
+    document.getElementById("telepules").placeholder =
+        TEXTS.municipalityPlaceholder;
+
+    document.getElementById("schoolLabel").textContent =
+        TEXTS.schoolLabel;
+        
+    document.getElementById("iskola").placeholder =
+    TEXTS.schoolPlaceholder;
+
+    document.getElementById("institutionTypeLabel").textContent =
+    TEXTS.institutionTypeLabel;
+
+document.getElementById("institutionTypeOtherText").placeholder =
+    TEXTS.institutionTypeOtherPlaceholder;
+
+document.getElementById("classLabel").textContent =
+    TEXTS.classLabel;
 
     document.getElementById("osztaly").placeholder =
         TEXTS.classPlaceholder;
@@ -139,29 +175,196 @@
 
     /*
      * ==========================================
+     * MUNICIPALITY AUTOCOMPLETE
+     * ==========================================
+     */
+
+    const municipalityInput =
+        document.getElementById("telepules");
+
+    const municipalityResults =
+        document.getElementById("telepulesResults");
+
+    const telepulesekRendezve =
+    [...moldovaTelepulesek].sort(function (a, b) {
+
+        const latinA =
+            a.split(" / ")[0];
+
+        const latinB =
+            b.split(" / ")[0];
+
+        return latinA.localeCompare(
+            latinB,
+            "ro",
+            {
+                sensitivity: "base"
+            }
+        );
+
+    });
+
+    municipalityInput.addEventListener("input", function () {
+
+        const query =
+            municipalityInput.value.trim().toLocaleLowerCase();
+
+        municipalityResults.innerHTML = "";
+
+        if (!query) {
+            return;
+        }
+
+      const matches =
+    telepulesekRendezve
+        .filter(function (municipality) {
+
+            const latinName =
+                municipality.split(" / ")[0];
+
+            return latinName
+                .toLocaleLowerCase()
+                .startsWith(query);
+
+        })
+
+        if (matches.length === 0) {
+
+            const empty =
+                document.createElement("div");
+
+            empty.className =
+                "autocomplete-empty";
+
+            empty.textContent =
+                "No matching municipality found.";
+
+            municipalityResults.appendChild(empty);
+
+            return;
+        }
+
+        matches.forEach(function (municipality) {
+
+            const item =
+                document.createElement("div");
+
+            item.className =
+                "autocomplete-item";
+
+            item.textContent =
+                municipality;
+
+            item.addEventListener("click", function () {
+
+                municipalityInput.value =
+                    municipality;
+
+                municipalityResults.innerHTML = "";
+
+            });
+
+            municipalityResults.appendChild(item);
+
+        });
+
+    });
+
+    document.addEventListener("click", function (event) {
+
+        if (!event.target.closest(".autocomplete")) {
+            municipalityResults.innerHTML = "";
+        }
+
+    });
+
+
+        /*
+     * ==========================================
+     * INSTITUTION TYPE
+     * ==========================================
+     */
+
+    const institutionTypeCheckboxes =
+        document.querySelectorAll(
+            'input[name="institutionType"]'
+        );
+
+    const institutionTypeOther =
+        document.getElementById("institutionTypeOther");
+
+    const institutionTypeOtherText =
+        document.getElementById("institutionTypeOtherText");
+
+
+    institutionTypeCheckboxes.forEach(function (checkbox) {
+
+        checkbox.addEventListener("change", function () {
+
+            /*
+             * Only one institution type
+             * can be selected.
+             */
+
+            if (checkbox.checked) {
+
+                institutionTypeCheckboxes.forEach(
+                    function (otherCheckbox) {
+
+                        if (otherCheckbox !== checkbox) {
+                            otherCheckbox.checked = false;
+                        }
+
+                    }
+                );
+
+            }
+
+
+            /*
+             * Show custom text field
+             * only when Other is selected.
+             */
+
+            if (
+                institutionTypeOther.checked
+            ) {
+
+                institutionTypeOtherText.style.display =
+                    "block";
+
+                institutionTypeOtherText.required =
+                    true;
+
+            } else {
+
+                institutionTypeOtherText.style.display =
+                    "none";
+
+                institutionTypeOtherText.required =
+                    false;
+
+                institutionTypeOtherText.value =
+                    "";
+
+            }
+
+        });
+
+    });
+
+
+    /*
+     * ==========================================
      * FORM ELEMENTS
      * ==========================================
      */
 
     const form =
         document.getElementById("ispringForm");
-
+    
     const button =
-        document.getElementById("submitButton");
-
-    const status =
-        document.getElementById("status");
-
-    const postSubmitButtons =
-        document.getElementById("postSubmitButtons");
-
-    const resendButton =
-        document.getElementById("resendButton");
-
-    const courseButton =
-        document.getElementById("courseButton");
-
-
+    document.getElementById("submitButton");
     /*
      * ==========================================
      * POWER AUTOMATE HTTP ENDPOINT
@@ -200,6 +403,42 @@
 
             const diakokSzama =
                 document.getElementById("diakokSzama").value;
+            const telepules =
+    document
+        .getElementById("telepules")
+        .value
+        .trim();
+
+            const iskola =
+    document
+        .getElementById("iskola")
+        .value
+        .trim();
+
+    const selectedInstitutionType =
+    document.querySelector(
+        'input[name="institutionType"]:checked'
+    );
+
+let intezmenyTipusa = "";
+
+if (selectedInstitutionType) {
+
+    if (
+        selectedInstitutionType.value === "Other"
+    ) {
+
+        intezmenyTipusa =
+            institutionTypeOtherText.value.trim();
+
+    } else {
+
+        intezmenyTipusa =
+            selectedInstitutionType.value;
+
+    }
+
+}
 
 
             /*
@@ -207,10 +446,13 @@
              */
 
             if (
-                !evfolyam ||
-                !osztaly ||
-                diakokSzama === ""
-            ) {
+    !evfolyam ||
+    !telepules ||
+    !iskola ||
+    !intezmenyTipusa ||
+    !osztaly ||
+    diakokSzama === ""
+) {
 
                 status.textContent =
                     TEXTS.validationRequired;
@@ -240,22 +482,30 @@
              * The data structure remains unchanged.
              */
 
-            const data = {
+           const data = {
 
-                evfolyam:
-                    evfolyam,
+    evfolyam:
+        evfolyam,
 
-                osztaly:
-                    osztaly,
+    telepules:
+        telepules,
 
-                diakokSzama:
-                    Number(diakokSzama),
+    iskola:
+        iskola,
+    
+    intezmenyTipusa:
+        intezmenyTipusa,
 
-                timestamp:
-                    new Date().toISOString()
+    osztaly:
+        osztaly,
 
-            };
+    diakokSzama:
+        Number(diakokSzama),
 
+    timestamp:
+        new Date().toISOString()
+
+};
 
             /*
              * Power Automate POST

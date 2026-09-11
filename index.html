@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Data Collection Form</title>
+    <title>Digital Fraud</title>
 
     <link rel="stylesheet" href="style.css">
 </head>
@@ -14,9 +14,11 @@
 <div class="form-container">
 
     <div class="form-header">
-        <h1 id="formTitle"></h1>
+        <h1 id="formTitle">Digital Fraud</h1>
 
-        <p id="formIntro"></p>
+        <p id="formIntro">
+            Data Protection Notice: The information provided in this form, including grade, municipality, school or educational institution, institution type, class, and number of students, is collected and transmitted for statistical and analytical purposes. The data is used to support the assessment of educational and digital fraud-related trends and to generate general statistical information. The collected information is intended for aggregated statistical analysis and reporting and is not used for purposes unrelated to this data collection. By submitting the form, you confirm that the information provided is accurate and understand that it will be processed for the purposes described above.
+        </p>
     </div>
 
     <form id="ispringForm">
@@ -55,7 +57,123 @@
         </div>
 
 
-        <!-- 2. Class -->
+        <!-- 2. Municipality -->
+        <div class="form-group">
+
+            <label for="telepules" id="municipalityLabel"></label>
+
+            <div class="autocomplete">
+
+                <input
+                    type="text"
+                    id="telepules"
+                    name="telepules"
+                    autocomplete="off"
+                    required
+                >
+
+                <div
+                    id="telepulesResults"
+                    class="autocomplete-results"
+                ></div>
+
+            </div>
+
+        </div>
+
+
+        <!-- 3. School / Educational institution -->
+        <div class="form-group">
+
+            <label for="iskola" id="schoolLabel"></label>
+
+            <input
+                type="text"
+                id="iskola"
+                name="iskola"
+                required
+            >
+
+        </div>
+
+
+        <!-- 4. Institution type -->
+        <div class="form-group">
+
+            <label id="institutionTypeLabel"></label>
+
+            <div class="institution-type-options">
+
+                <label class="checkbox-option">
+                    <input
+                        type="checkbox"
+                        name="institutionType"
+                        value="Primary school"
+                    >
+                    <span>Școală primară / Primary school</span>
+                </label>
+
+                <label class="checkbox-option">
+                    <input
+                        type="checkbox"
+                        name="institutionType"
+                        value="Gymnasium"
+                    >
+                    <span>Gimnaziu / Gymnasium</span>
+                </label>
+
+                <label class="checkbox-option">
+                    <input
+                        type="checkbox"
+                        name="institutionType"
+                        value="Lyceum"
+                    >
+                    <span>Liceu / Lyceum</span>
+                </label>
+
+                <label class="checkbox-option">
+                    <input
+                        type="checkbox"
+                        name="institutionType"
+                        value="Special school"
+                    >
+                    <span>Școală specială / Special school</span>
+                </label>
+
+                <label class="checkbox-option">
+                    <input
+                        type="checkbox"
+                        name="institutionType"
+                        value="Evening school"
+                    >
+                    <span>Școală serală / Evening school</span>
+                </label>
+
+                <label class="checkbox-option">
+                    <input
+                        type="checkbox"
+                        name="institutionType"
+                        value="Other"
+                        id="institutionTypeOther"
+                    >
+                    <span>Altul / Other</span>
+                </label>
+
+            </div>
+
+            <input
+                type="text"
+                id="institutionTypeOtherText"
+                name="institutionTypeOtherText"
+                placeholder="Enter institution type..."
+                style="display: none; margin-top: 12px;"
+            >
+
+        </div>
+
+
+        <!-- 5. Class -->
+
         <div class="form-group">
 
             <label for="osztaly" id="classLabel"></label>
@@ -70,7 +188,7 @@
         </div>
 
 
-        <!-- 3. Number of students -->
+        <!-- 6. Number of students -->
         <div class="form-group">
 
             <label for="diakokSzama" id="studentsLabel"></label>
@@ -132,6 +250,14 @@
 
 <script src="data/moldova_telepulesek.js"></script>
 <script src="script.js"></script>
+
+<!-- Keep the new title and information notice after script.js -->
+<script>
+    document.getElementById("formTitle").textContent = "Digital Fraud";
+
+    document.getElementById("formIntro").textContent =
+        "To access the “Digital Fraud” learning material, please complete the form below. Once you have provided the requested information and submitted the form, you can continue to the course.";
+</script>
 
 </body>
 </html>

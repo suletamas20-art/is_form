@@ -1478,4 +1478,16 @@ const moldovaTelepulesek = [
     "Gherşunovca / Гершуновка",
     "Vinogradnoe / Виноградное",
     "Nicolscoe / Никольское",
-];
+].sort((a, b) => {
+    const latinA = a.split(" / ")[0]
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "");
+
+    const latinB = b.split(" / ")[0]
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "");
+
+    return latinA.localeCompare(latinB, "en", {
+        sensitivity: "base"
+    });
+});
