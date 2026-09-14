@@ -27,13 +27,13 @@
                 "Please enter the following information.",
 
             gradeLabel:
-                "1. Grade",
+                "1. Grade level",
 
             gradePlaceholder:
                 "Select a grade",
 
             municipalityLabel:
-                "2. Municipality",
+                "2. City / Town",
 
             municipalityPlaceholder:
                 "Start typing a municipality...",
